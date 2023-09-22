@@ -6,6 +6,7 @@ import Dropzone from './Dropzone'
 const navigation = [
   { name: 'Chatbot', href: '/chatbot' },
   { name: 'Features', href: '#' },
+  { name: 'Product', href: '#' },
   { name: 'Marketplace', href: '#' },
   { name: 'Company', href: '#' },
 ]
