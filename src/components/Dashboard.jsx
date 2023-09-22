@@ -2,19 +2,19 @@
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import Dropzone from './Dropzone'
+import ChatbotComponent from './ChatBot'
 const navigation = [
-  { name: 'Chatbot', href: '/chatbot' },
-  { name: 'Features', href: '#' },
-  { name: 'Product', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
+  { name: 'Documents', href: '/' },
+  { name: 'Text', href: '/text-translate' },
+  { name: 'History', href: '/history' },
+  // { name: 'Marketplace', href: '#' },
+  // { name: 'Company', href: '#' },
 ]
 
 export default function Dashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  return (
+  return (<>
     <div className="bg-white">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
@@ -112,7 +112,6 @@ export default function Dashboard() {
             }}
           />
         </div>
-        <Dropzone />
         <div
           className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
           aria-hidden="true"
@@ -128,6 +127,7 @@ export default function Dashboard() {
       </div>
 
     </div>
-
+    <ChatbotComponent/>
+</>
   )
 }

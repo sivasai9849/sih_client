@@ -1,24 +1,21 @@
 
 import Dashboard from './components/Dashboard';
 import React, { useState } from 'react';
- 
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
 import Dropzone from './components/Dropzone';
-import ChatbotComponent from './components/ChatBot';
-
-
+import TextTranslate from './components/TextTranslate';
+import History from './components/History';
 function App() {
   return (
     <div className="App">
+    <Dashboard/>
       <Router>
         <Routes>
           {/* The root route should only match the exact path */}
-          <Route exact path="/" element={<Dashboard />} />
-          <Route exact path="/chatbot" element={<ChatbotComponent />} />
+          <Route exact path="/" element={<Dropzone />} />
+          <Route exact path="/text-translate" element={<TextTranslate />} />
           {/* The Dropzone component should be rendered when the URL path is /dropzone */}
-          <Route path="/dropzone" element={<Dropzone />} />
+          <Route exact path="/history" element={<History />} />
         </Routes>
       </Router>
     </div>
