@@ -1,8 +1,11 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-
+import Dropzone from './Dropzone'
 const navigation = [
+  { name: 'Chatbot', href: '/chatbot' },
+  { name: 'Features', href: '#' },
   { name: 'Product', href: '#' },
   { name: 'Marketplace', href: '#' },
   { name: 'Company', href: '#' },
@@ -109,6 +112,7 @@ export default function Dashboard() {
             }}
           />
         </div>
+        <Dropzone />
         <div
           className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
           aria-hidden="true"
@@ -122,6 +126,8 @@ export default function Dashboard() {
           />
         </div>
       </div>
+
     </div>
+
   )
 }
