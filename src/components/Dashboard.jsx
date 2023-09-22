@@ -5,11 +5,14 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Dropzone from "./Dropzone";
 import ChatbotComponent from "./ChatBot";
 const navigation = [
-  { name: "Chatbot", href: "/chatbot" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
-];
+
+  { name: 'Chatbot', href: '/chatbot' },
+  { name: 'Features', href: '#' },
+  { name: 'Product', href: '#' },
+  { name: 'Marketplace', href: '#' },
+  { name: 'Company', href: '#' },
+]
+
 
 export default function Dashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
