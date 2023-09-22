@@ -9,7 +9,8 @@ export default function TextTranslate() {
   const [file, setFile] = useState(null);
   const [outputLanguage, setOutputLanguage] = useState("");
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
-  const [response, setResponse] = useState(null);
+  const [render, setRender] = useState(false);
+  const [extracted_data, setExtracted_data] = useState(null);
 
   useEffect(() => {
     setIsSubmitEnabled(outputLanguage && file);
@@ -29,23 +30,27 @@ export default function TextTranslate() {
   }
 
   async function onSubmit() {
-    console.log("Submitting file:")
+    console.log("Submitting file:");
     const fileUrl = await FileUpload(file, `uploads/${file.name}${Date.now()}`);
     setFileUrl(fileUrl);
     // Define the data to be sent in the request body
-    console.log("🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ fileUrl:", fileUrl)
+    console.log(
+      "🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ fileUrl:",
+      fileUrl
+    );
     const data = {
       fileUrl: fileUrl, // Replace with the actual file URL
       targetLanguage: outputLanguage, // Replace with the actual target language
     };
-    console.log("🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ data:", data)
+    console.log("🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ data:", data);
     try {
-      const response = await axios.post(
+      const extracted_data = await axios.post(
         "http://localhost:9000/process",
         data
       );
-      console.log("Response:", response.data);
-      setResponse(response.data);
+      console.log("Response:", extracted_data.data);
+      setExtracted_data(extracted_data.data);
+      setRender(extracted_data.data.success);
     } catch (error) {
       // Handle any errors that occur during the request
       console.error("Error:", error);
@@ -147,14 +152,13 @@ export default function TextTranslate() {
           >
             Submit
           </button>
-          {response && (
+          {render ? (
             <div className="mt-4">
               <p className="text-sm text-gray-900 dark:text-gray-900">
-                Response:
+                {extracted_data.summary}
               </p>
-              <pre>{JSON.stringify(response, null, 2)}</pre>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
