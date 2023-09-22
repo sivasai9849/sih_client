@@ -3,27 +3,83 @@ import axios from "axios";
 import { PDFDocument } from "pdf-lib";
 import { FileUpload } from "./../config/utils";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-
 function Dropzone() {
   const [file, setFile] = useState(null);
   const [outputLanguage, setOutputLanguage] = useState("");
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+  const [fileType, setFileType] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
+  const [transUrl, setTransUrl] = useState("");
 
   async function onFileChange(e) {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
-    const { type } = selectedFile;
-    const fileToUpload =
-      type === "image/jpeg" || type === "image/png"
-        ? selectedFile
-        : selectedFile;
-    setFile(fileToUpload);
-    console.log("File updated:", fileToUpload);
-  }
 
+    const { type } = selectedFile;
+    if (
+      type !== "image/jpeg" &&
+      type !== "image/png" &&
+      type !== "application/pdf" &&
+      type !==
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
+      type !== "application/msword"
+    )
+      return;
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      let pdfDoc;
+      if (type === "application/pdf") {
+        const pdfData = new Uint8Array(reader.result);
+        pdfDoc = await PDFDocument.load(pdfData);
+      } else {
+        const imgData = reader.result;
+        pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage();
+        const { width, height } = page.getSize();
+
+        if (type === "image/jpeg") {
+          const img = await pdfDoc.embedJpg(imgData);
+          page.drawImage(img, {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+          });
+        } else if (type === "image/png") {
+          const img = await pdfDoc.embedPng(imgData);
+          page.drawImage(img, {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+          });
+        }
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      const pdfFile = new File([pdfBytes], `${selectedFile.name}.pdf`, {
+        type: "application/pdf",
+      });
+      setFile(pdfFile);
+    };
+
+    if (
+      type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      type === "application/msword"
+    ) {
+      setFile(selectedFile);
+    } else if (type === "application/pdf") {
+      reader.readAsArrayBuffer(selectedFile);
+    } else if (type === "image/jpeg" || type === "image/png") {
+      reader.readAsDataURL(selectedFile);
+    }
+  }
 
   async function onSubmit() {
     const fileUrl = await FileUpload(file, `uploads/${file.name}${Date.now()}`);
+    setFileUrl(fileUrl);
     const options = {
       method: "POST",
       url: "https://api.edenai.run/v2/translation/document_translation",
@@ -45,6 +101,11 @@ function Dropzone() {
       .then((response) => {
         console.log(response.data);
         console.log(response.data.google.document_resource_url);
+        // download file
+        const a = document.createElement("a");
+        a.href = response.data.google.document_resource_url;
+        a.download = `${file.name}.pdf`;
+        a.click();
       })
       .catch((error) => {
         console.error(error);
@@ -52,9 +113,11 @@ function Dropzone() {
   }
 
   useEffect(() => {
-    setIsSubmitEnabled(outputLanguage && file);
-    console.log("Submit enabled:", outputLanguage && file);
-  }, [outputLanguage, file]);
+    setIsSubmitEnabled(outputLanguage && file && fileType);
+    console.log("Submit enabled:", outputLanguage && file && fileType);
+  }, [outputLanguage, file, fileType]);
+
+  
 
   console.log("Rendered with file:", file);
   console.log("Rendered with outputLanguage:", outputLanguage);
@@ -64,6 +127,26 @@ function Dropzone() {
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col items-center justify-center w-full mb-4">
           <div className="flex">
+            <div className="w-full mb-4">
+              <FormControl
+                variant="outlined"
+                sx={{
+                  minWidth: 180,
+                }}
+              >
+                <InputLabel id="file-type-label">File Type</InputLabel>
+                <Select
+                  labelId="file-type-label"
+                  id="file-type-select"
+                  value={fileType}
+                  onChange={(e) => setFileType(e.target.value)}
+                  label="File Type"
+                >
+                  <MenuItem value="image">JPG/PNG</MenuItem>
+                  <MenuItem value="document">PDF/DOC</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
             <div className="w-full mb-4 ml-96">
               <FormControl
                 variant="outlined"
@@ -130,16 +213,31 @@ function Dropzone() {
             />
           </label>
           {file && (
-            <div className="mt-4">
-              <p className="text-sm text-gray-900 dark:text-gray-900">
-                {file.name}
-              </p>
-              <iframe
-                src={URL.createObjectURL(file)}
-                title={`PDF preview of ${file.name}`}
-                className="w-full h-64 border-2 border-gray-300 border-dashed rounded-lg"
-                toggle="modal"
-              />
+            <div className="flex w-full">
+              <div className="mt-4 mr-40">
+                <p className="text-sm text-gray-900 dark:text-gray-900">
+                  Uploaded File
+                </p>
+                <iframe
+                  src={`${URL.createObjectURL(file)}#toolbar=0`}
+                  title={"Uploaded File"}
+                  className="w-full h-64 border-2 border-gray-300 border-none rounded-lg"
+                  toggle="modal"
+                />
+              </div>
+              {transUrl && (
+                <div className="mt-4 mr-40">
+                  <p className="text-sm text-gray-900 dark:text-gray-900">
+                    Uploaded File
+                  </p>
+                  <iframe
+                    src={transUrl}
+                    title={"Uploaded File"}
+                    className="w-full h-64 border-2 border-gray-300 border-none rounded-lg"
+                    toggle="modal"
+                  />
+                </div>
+              )}
             </div>
           )}
           <button
