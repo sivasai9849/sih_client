@@ -1,6 +1,12 @@
+
+import Dashboard from './components/Dashboard';
+import React, { useState } from 'react';
+ 
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Dropzone from './components/Dropzone';
+
 
 function App() {
   return (
