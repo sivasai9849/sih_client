@@ -3,9 +3,8 @@ import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Dropzone from './Dropzone'
-
 const navigation = [
-  { name: 'Product', href: '#' },
+  { name: 'Chatbot', href: '/chatbot' },
   { name: 'Features', href: '#' },
   { name: 'Marketplace', href: '#' },
   { name: 'Company', href: '#' },
@@ -126,6 +125,8 @@ export default function Dashboard() {
           />
         </div>
       </div>
+
     </div>
+
   )
 }

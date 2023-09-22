@@ -1,31 +1,29 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PDFDocument } from "pdf-lib";
 import { FileUpload } from "./../config/utils";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-
 function Dropzone() {
   const [file, setFile] = useState(null);
-  const [outputLanguage, setOutputLanguage] = useState('');
+  const [outputLanguage, setOutputLanguage] = useState("");
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
-  const [url,setUrl]=useState('');
 
   async function onFileChange(e) {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
-
     const { type } = selectedFile;
     const fileToUpload =
       type === "image/jpeg" || type === "image/png"
-        ? await convertImageToPdf(selectedFile)
+        ? selectedFile
         : selectedFile;
-
     setFile(fileToUpload);
+    console.log("File updated:", fileToUpload);
+  }
 
-    const fileName = `uploads/${fileToUpload.name}${Date.now()}`;
-    const fileUrl = await FileUpload(fileToUpload, fileName);
 
+  async function onSubmit() {
+    const fileUrl = await FileUpload(file, `uploads/${file.name}${Date.now()}`);
     const options = {
       method: "POST",
       url: "https://api.edenai.run/v2/translation/document_translation",
@@ -42,74 +40,24 @@ function Dropzone() {
         file_url: fileUrl,
       },
     };
-
     axios
       .request(options)
       .then((response) => {
         console.log(response.data);
         console.log(response.data.google.document_resource_url);
-        setUrl(response.data.google.document_resource_url);
-        // add dircet downloadable link
-        const a = document.createElement("a");
-        a.href = response.data.google.document_resource_url;
-        a.download = `${fileToUpload.name}.pdf`;
-        a.click();
-
-
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
-  async function convertImageToPdf(imageFile) {
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(imageFile);
-    await new Promise((resolve) => {
-      reader.onload = resolve;
-    });
-    const buffer = reader.result;
-    const view = new DataView(buffer);
-    let image;
-    if (
-      view.getUint8(0) === 0xff &&
-      view.getUint8(1) === 0xd8
-    ) {
-      // JPEG file
-      image = await PDFDocument.create().embedJpg(buffer);
-    } else if (
-      view.getUint8(0) === 0x89 &&
-      view.getUint8(1) === 0x50 &&
-      view.getUint8(2) === 0x4e &&
-      view.getUint8(3) === 0x47 &&
-      view.getUint8(4) === 0x0d &&
-      view.getUint8(5) === 0x0a &&
-      view.getUint8(6) === 0x1a &&
-      view.getUint8(7) === 0x0a
-    ) {
-      // PNG file
-      image = await PDFDocument.create().embedPng(buffer);
-    } else {
-      throw new Error("Invalid image file");
-    }
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([image.width, image.height]);
-    page.drawImage(image, {
-      x: 0,
-      y: 0,
-      width: image.width,
-      height: image.height,
-    });
-    const pdfBytes = await pdfDoc.save();
-    return new File([pdfBytes], `${imageFile.name}.pdf`, {
-      type: "application/pdf",
-    });
-  }
-
- 
   useEffect(() => {
     setIsSubmitEnabled(outputLanguage && file);
+    console.log("Submit enabled:", outputLanguage && file);
   }, [outputLanguage, file]);
+
+  console.log("Rendered with file:", file);
+  console.log("Rendered with outputLanguage:", outputLanguage);
 
   return (
     <div className="flex-col items-center justify-center h-screen mt-16">
@@ -124,7 +72,9 @@ function Dropzone() {
                 }}
                 className="w-full"
               >
-                <InputLabel id="output-language-label">Select Language</InputLabel>
+                <InputLabel id="output-language-label">
+                  Select Language
+                </InputLabel>
                 <Select
                   labelId="output-language-label"
                   id="output-language"
@@ -151,7 +101,7 @@ function Dropzone() {
           </div>
           <label
             htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-900 border rounded-lg cursor-pointer bg-gradient-to-r from-white  hover:bg-gradient-to-r hover:from-white dark:hover:border-gray-200 dark:hover:bg-pink-100 backdrop-filter backdrop-blur-lg bg-opacity-30"
+            className="flex flex-col items-center justify-center w-full h-64  border-gray-900 border rounded-lg cursor-pointer bg-gradient-to-r from-white  hover:bg-gradient-to-r hover:bg-gray-200  backdrop-filter backdrop-blur-lg bg-opacity-30"
           >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg
@@ -175,8 +125,8 @@ function Dropzone() {
               id="dropzone-file"
               type="file"
               className="sr-only"
-              onChange={onFileChange}
               accept=".pdf,.jpg,.png,.doc,.docx"
+              onChange={onFileChange}
             />
           </label>
           {file && (
@@ -192,19 +142,15 @@ function Dropzone() {
               />
             </div>
           )}
-          {url &&(
-            <div className="mt-4">
-            <p className="text-sm text-gray-900 dark:text-gray-900">
-            </p>
-            <iframe
-              src={url}
-              title={`PDF preview of `}
-              className="w-full h-64 border-2 border-gray-300 border-dashed rounded-lg"
-              toggle="modal"
-            />
-          </div>
-          )
-          }
+          <button
+            className={`mt-4 px-4 py-2 rounded-md text-white font-medium bg-gradient-to-r from-blue-500 to-blue-600 ${
+              isSubmitEnabled ? "" : "opacity-50 cursor-not-allowed"
+            }`}
+            disabled={!isSubmitEnabled}
+            onClick={onSubmit}
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>
