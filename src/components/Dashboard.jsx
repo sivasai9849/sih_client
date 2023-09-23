@@ -26,10 +26,12 @@ export default function Dashboard() {
                 <span className="sr-only">Your Company</span>
                 <img
                   className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                  src="https://media.istockphoto.com/id/1322384899/fr/vectoriel/ic%C3%B4ne-documents-pile-de-feuilles-de-papier-document-confirm%C3%A9-ou-approuv%C3%A9-ic%C3%B4ne.jpg?s=612x612&w=0&k=20&c=HcWhEKL3q4P8xVZVIT5iOws8I0d8IMqigO2My78owTE="
                   alt=""
                 />
+
               </a>
+              <div className="text-xl ml-4 text-blue-600">Document Translate</div>
             </div>
             <div className="flex lg:hidden">
               <button
