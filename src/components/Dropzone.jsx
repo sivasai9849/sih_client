@@ -85,7 +85,7 @@ function Dropzone() {
       url: "https://api.edenai.run/v2/translation/document_translation",
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjk5YTg1MTEtYjY0MS00YWNmLTkwY2YtMDU4YTFiMzA1N2FkIiwidHlwZSI6ImFwaV90b2tlbiJ9.akHCbyo0pIC6DXwAvEI6Z2xq8jOkDMY0IoCK_0ItfVY",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYjBjZWI0OGQtY2IyMC00NjNhLWFlYmYtOGJkMTE5ODNlMWQ2IiwidHlwZSI6ImFwaV90b2tlbiJ9.cWfYK-Xtis6BJ50jXV-_bGexKqhEbRvWvNJPJ2Np5tM",
       },
       data: {
         show_original_response: false,
@@ -166,7 +166,6 @@ function Dropzone() {
                   label="Select Language"
                 >
                   <MenuItem value="hi">Hindi</MenuItem>
-                  <MenuItem value="te">Telugu</MenuItem>
                   <MenuItem value="ta">Tamil</MenuItem>
                   <MenuItem value="kn">Kannada</MenuItem>
                   <MenuItem value="ml">Malayalam</MenuItem>
@@ -174,6 +173,7 @@ function Dropzone() {
                   <MenuItem value="mr">Marathi</MenuItem>
                   <MenuItem value="pa">Punjabi</MenuItem>
                   <MenuItem value="bn">Bengali</MenuItem>
+                  <MenuItem value="te">Telugu</MenuItem>
                   <MenuItem value="ur">Urdu</MenuItem>
                   <MenuItem value="or">Odia</MenuItem>
                   <MenuItem value="as">Assamese</MenuItem>
@@ -184,7 +184,7 @@ function Dropzone() {
           </div>
           <label
             htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-full h-64  border-gray-900 border rounded-lg cursor-pointer bg-gradient-to-r from-white  hover:bg-gradient-to-r hover:bg-gray-200  backdrop-filter backdrop-blur-lg bg-opacity-30"
+            className="flex flex-col items-center justify-center w-full h-64  border-gray-900 border rounded-lg"
           >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg

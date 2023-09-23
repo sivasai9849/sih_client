@@ -1,44 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function TextToSpeech({ text, lang }) {
-  const [selectedLanguage, setSelectedLanguage] = useState(lang); // Set initial language based on the 'lang' prop
-  const [utteranceText, setUtteranceText] = useState(text); // Use a separate state for the utterance text
-  const synth = window.speechSynthesis;
+function TextToSpeechAPI({ text, lang }) {
+  const [isPlaying, setIsPlaying] = useState(false); // Add a state variable to keep track of whether the audio is playing or not
 
-  // Update the 'utteranceText' state when 'text' prop changes
-  useEffect(() => {
-    setUtteranceText(text);
-  }, [text]);
-
-  useEffect(() => {
-    // This effect will run whenever the selectedLanguage or utteranceText changes
-    const utterance = new SpeechSynthesisUtterance(utteranceText);
-    console.log("🚀 ~ file: Speech.js:16 ~ useEffect ~ utteranceText:", utteranceText)
-    utterance.lang = selectedLanguage; // Set the language
-    console.log("🚀 ~ file: Speech.js:18 ~ useEffect ~ lang:", lang)
-    synth.speak(utterance);
-  }, [selectedLanguage, utteranceText]);
-
-  const speakText = () => {
-    if (!utteranceText) {
-      alert('Please enter text to speak.');
-      return;
+  const options = {
+    method: 'GET',
+    url: 'https://text-to-speech-api3.p.rapidapi.com/speak',
+    params: {
+      text: text,
+      lang: lang
+    },
+    responseType: 'arraybuffer', // Set the response type to 'arraybuffer'
+    headers: {
+      'X-RapidAPI-Key': '08c766dfb2msh6d00b8d4358723ep1a2161jsn420366549ee8',
+      'X-RapidAPI-Host': 'text-to-speech-api3.p.rapidapi.com'
     }
   };
 
-  const stopSpeaking = () => {
-    synth.cancel();
-  };
+  const speakText = async () => {
+    if (isPlaying) { // If the audio is already playing, return without doing anything
+      return;
+    }
 
-  const setText = (newText) => {
-    setUtteranceText(newText);
+    try {
+      setIsPlaying(true); // Set the 'isPlaying' state to true
+      const response = await axios.request(options);
+      const audio = new Audio(URL.createObjectURL(new Blob([response.data])));
+      audio.play();
+      audio.addEventListener('ended', () => setIsPlaying(false)); // Set the 'isPlaying' state to false when the audio finishes playing
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div>
-      {/* Render your TextToSpeech component here */}
+      <button onClick={speakText}>Speak Text</button>
     </div>
   );
 }
 
-export default TextToSpeech;
+export default TextToSpeechAPI;
