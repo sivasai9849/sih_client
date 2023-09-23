@@ -45,7 +45,7 @@ export default function TextTranslate() {
     console.log("🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ data:", data);
     try {
       const extracted_data = await axios.post(
-        "http://localhost:9000/process",
+        "https://sih-server.adaptable.app/process",
         data
       );
       console.log("Response:", extracted_data.data);
