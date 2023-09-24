@@ -51,7 +51,7 @@ export default function TextTranslate() {
       console.log("Response:", extracted_data.data);
       setExtracted_data(extracted_data.data);
       setRender(extracted_data.data.success);
-      setPlaySummary(!playSummary)
+      setPlaySummary(!playSummary);
     } catch (error) {
       // Handle any errors that occur during the request
       console.error("Error:", error);
@@ -66,7 +66,7 @@ export default function TextTranslate() {
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col  w-full mb-4">
           <div className="flex">
-            <div className="w-full mb-4 ml-96">
+            <div className="flex flex-col items-center justify-center w-full mb-4">
               <FormControl
                 variant="outlined"
                 sx={{
@@ -103,10 +103,10 @@ export default function TextTranslate() {
           </div>
           <label
             htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-full h-64  border-gray-900 border rounded-lg "
+            className="flex flex-col items-center justify-center w-full h-64 mt-8 mb-6 border-black border-4 rounded-xl hover:border-dashed hover:border-gray-400"
           >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
+              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -119,9 +119,9 @@ export default function TextTranslate() {
                   strokeLinejoin="round"
                   d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                 />
-              </svg>
+              </svg> */}
 
-              <p className="text-sm text-gray-900 dark:text-gray-900">
+              <p className="text-xl text-black dark:text-black font-semibold ">
                 Drag and drop a file or click to select a file
               </p>
             </div>
@@ -141,7 +141,7 @@ export default function TextTranslate() {
               <iframe
                 src={URL.createObjectURL(file)}
                 title={`PDF preview of ${file.name}`}
-                className="w-full h-64 border-2 border-gray-300 border-dashed rounded-lg"
+                className="w-full h-64 border-2 border-gray-300 border-none rounded-lg"
                 toggle="modal"
               />
             </div>
@@ -160,15 +160,11 @@ export default function TextTranslate() {
               <p className="text-sm text-gray-900 dark:text-gray-900">
                 {extracted_data.summary}
               </p>
-              
             </div>
           ) : null}
         </div>
         {playSummary && (
-          <TextToSpeech
-            text={extracted_data.summary}
-            lang={outputLanguage}
-          />
+          <TextToSpeech text={extracted_data.summary} lang={outputLanguage} />
         )}
       </div>
     </div>

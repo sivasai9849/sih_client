@@ -152,6 +152,8 @@ function Dropzone() {
                 variant="outlined"
                 sx={{
                   minWidth: 180,
+                  fontSize: 20,
+                  fontStyle: "bold",
                 }}
                 className="w-full"
               >
@@ -184,24 +186,24 @@ function Dropzone() {
           </div>
           <label
             htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-full h-64  border-gray-900 border rounded-lg"
+            className="flex flex-col items-center justify-center w-full h-64 mt-8 mb-6 border-black border-4 rounded-xl hover:border-dashed hover:border-gray-400 "
           >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-            <svg
+            <div className="flex flex-col items-center justify-center pt-4 pb-5  ">
+            {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="w-6 h-6 mb-4"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                 />
-              </svg>
-              <p className="text-sm text-gray-900 dark:text-gray-900">
+              </svg> */}
+              <p className="text-xl text-black dark:text-black font-semibold ">
                 Drag and drop a file or click to select a file
               </p>
             </div>

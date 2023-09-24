@@ -24,14 +24,14 @@ export default function Dashboard() {
             <div className="flex lg:flex-1">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
-                <img
+                {/* <img
                   className="h-8 w-auto"
                   src="https://media.istockphoto.com/id/1322384899/fr/vectoriel/ic%C3%B4ne-documents-pile-de-feuilles-de-papier-document-confirm%C3%A9-ou-approuv%C3%A9-ic%C3%B4ne.jpg?s=612x612&w=0&k=20&c=HcWhEKL3q4P8xVZVIT5iOws8I0d8IMqigO2My78owTE="
                   alt=""
-                />
+                /> */}
 
               </a>
-              <div className="text-xl ml-4 text-blue-600">Document Translate</div>
+
             </div>
             <div className="flex lg:hidden">
               <button
@@ -48,7 +48,7 @@ export default function Dashboard() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-sm font-semibold leading-6 text-gray-900"
+                  className="text-xl font-bold leading-6 text-black hover:text-gray-900"
                 >
                   {item.name}
                 </a>
@@ -106,7 +106,7 @@ export default function Dashboard() {
           </Dialog>
         </header>
 
-        <div className="relative isolate px-6 pt-14 lg:px-8">
+        {/* <div className="relative isolate px-6 pt-14 lg:px-8">
           <div
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
             aria-hidden="true"
@@ -131,8 +131,14 @@ export default function Dashboard() {
               }}
             />
           </div>
-        </div>
+        </div> */}
       </div>
+
+      <header className="bg-white shadow">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div className="text-xl ml-4 text-blue-600 font-bold tracking-tight ">Document Translate</div>
+          </div>
+        </header>
       <ChatbotComponent />
     </>
   );
