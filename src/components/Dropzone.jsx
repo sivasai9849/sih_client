@@ -85,7 +85,7 @@ function Dropzone() {
       url: "https://api.edenai.run/v2/translation/document_translation",
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjk5YTg1MTEtYjY0MS00YWNmLTkwY2YtMDU4YTFiMzA1N2FkIiwidHlwZSI6ImFwaV90b2tlbiJ9.akHCbyo0pIC6DXwAvEI6Z2xq8jOkDMY0IoCK_0ItfVY",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYjBjZWI0OGQtY2IyMC00NjNhLWFlYmYtOGJkMTE5ODNlMWQ2IiwidHlwZSI6ImFwaV90b2tlbiJ9.cWfYK-Xtis6BJ50jXV-_bGexKqhEbRvWvNJPJ2Np5tM",
       },
       data: {
         show_original_response: false,
@@ -152,6 +152,8 @@ function Dropzone() {
                 variant="outlined"
                 sx={{
                   minWidth: 180,
+                  fontSize: 20,
+                  fontStyle: "bold",
                 }}
                 className="w-full"
               >
@@ -166,7 +168,6 @@ function Dropzone() {
                   label="Select Language"
                 >
                   <MenuItem value="hi">Hindi</MenuItem>
-                  <MenuItem value="te">Telugu</MenuItem>
                   <MenuItem value="ta">Tamil</MenuItem>
                   <MenuItem value="kn">Kannada</MenuItem>
                   <MenuItem value="ml">Malayalam</MenuItem>
@@ -174,6 +175,7 @@ function Dropzone() {
                   <MenuItem value="mr">Marathi</MenuItem>
                   <MenuItem value="pa">Punjabi</MenuItem>
                   <MenuItem value="bn">Bengali</MenuItem>
+                  <MenuItem value="te">Telugu</MenuItem>
                   <MenuItem value="ur">Urdu</MenuItem>
                   <MenuItem value="or">Odia</MenuItem>
                   <MenuItem value="as">Assamese</MenuItem>
@@ -184,23 +186,24 @@ function Dropzone() {
           </div>
           <label
             htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-full h-64  border-gray-900 border rounded-lg cursor-pointer bg-gradient-to-r from-white  hover:bg-gradient-to-r hover:bg-gray-200  backdrop-filter backdrop-blur-lg bg-opacity-30"
+            className="flex flex-col items-center justify-center w-full h-64 mt-8 mb-6 border-black border-4 rounded-xl hover:border-dashed hover:border-gray-400 "
           >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
-                className="w-10 h-10 mb-3 text-gray-900"
+            <div className="flex flex-col items-center justify-center pt-4 pb-5  ">
+            {/* <svg
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                stroke="currentColor"
                 viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 mb-4"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                 />
-              </svg>
-              <p className="text-sm text-gray-900 dark:text-gray-900">
+              </svg> */}
+              <p className="text-xl text-black dark:text-black font-semibold ">
                 Drag and drop a file or click to select a file
               </p>
             </div>

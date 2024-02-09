@@ -45,12 +45,13 @@ export default function TextTranslate() {
     console.log("🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ data:", data);
     try {
       const extracted_data = await axios.post(
-        "http://localhost:9000/process",
+        "https://sih-server.adaptable.app/process",
         data
       );
       console.log("Response:", extracted_data.data);
       setExtracted_data(extracted_data.data);
       setRender(extracted_data.data.success);
+      setPlaySummary(!playSummary);
     } catch (error) {
       // Handle any errors that occur during the request
       console.error("Error:", error);
@@ -65,7 +66,7 @@ export default function TextTranslate() {
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col  w-full mb-4">
           <div className="flex">
-            <div className="w-full mb-4 ml-96">
+            <div className="flex flex-col items-center justify-center w-full mb-4">
               <FormControl
                 variant="outlined"
                 sx={{
@@ -102,23 +103,25 @@ export default function TextTranslate() {
           </div>
           <label
             htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-full h-64  border-gray-900 border rounded-lg cursor-pointer bg-gradient-to-r from-white  hover:bg-gradient-to-r hover:bg-gray-200  backdrop-filter backdrop-blur-lg bg-opacity-30"
+            className="flex flex-col items-center justify-center w-full h-64 mt-8 mb-6 border-black border-4 rounded-xl hover:border-dashed hover:border-gray-400"
           >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
-                className="w-10 h-10 mb-3 text-gray-900"
+              {/* <svg
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                stroke="currentColor"
                 viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                 />
-              </svg>
-              <p className="text-sm text-gray-900 dark:text-gray-900">
+              </svg> */}
+
+              <p className="text-xl text-black dark:text-black font-semibold ">
                 Drag and drop a file or click to select a file
               </p>
             </div>
@@ -138,7 +141,7 @@ export default function TextTranslate() {
               <iframe
                 src={URL.createObjectURL(file)}
                 title={`PDF preview of ${file.name}`}
-                className="w-full h-64 border-2 border-gray-300 border-dashed rounded-lg"
+                className="w-full h-64 border-2 border-gray-300 border-none rounded-lg"
                 toggle="modal"
               />
             </div>
@@ -157,29 +160,12 @@ export default function TextTranslate() {
               <p className="text-sm text-gray-900 dark:text-gray-900">
                 {extracted_data.summary}
               </p>
-              <div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-                onClick={() => setPlaySummary(!playSummary)}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"
-                />
-              </svg>
-              </div >
             </div>
           ) : null}
         </div>
         {playSummary && (
-        <TextToSpeech text={extracted_data.summary} lang={`${outputLanguage}-IN`} />
-      )}
+          <TextToSpeech text={extracted_data.summary} lang={outputLanguage} />
+        )}
       </div>
     </div>
   );
