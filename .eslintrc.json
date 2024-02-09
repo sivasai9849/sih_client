@@ -1,0 +1,42 @@
+{
+    "parser": "@babel/eslint-parser",
+    "extends": ["eslint:recommended", "plugin:react/recommended","plugin:import/recommended","plugin:prettier/recommended"],
+    "plugins": ["react", "react-hooks","simple-import-sort", "prettier"],
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "requireConfigFile": false,
+        "babelOptions": {
+            "presets": ["@babel/preset-react"]
+        }
+      },
+    "rules": {
+        "prettier/prettier": "error",
+        "react/react-in-jsx-scope": "off",
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+        "curly": ["error", "all"],
+        "import/no-cycle": ["error", { "ignoreExternal": true, "maxDepth": 16 }],
+        "react/prop-types": "off",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "no-console": "warn",
+        "no-eval": "error",
+        "no-var": "error",
+        "no-tabs":"warn",
+        "no-unused-vars": "warn",
+        "prefer-const": "error",
+        "prefer-arrow-callback": "error",
+        "arrow-spacing": ["error", { "before": true, "after": true }],
+        "comma-dangle": ["error", "always-multiline"],
+        "semi": ["error", "always"]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}

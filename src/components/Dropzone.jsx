@@ -1,79 +1,30 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { PDFDocument } from "pdf-lib";
-import { FileUpload } from "./../config/utils";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+import { convertToPdf } from "../config/pdfutil";
+import { FileUpload } from "./../config/utils";
 function Dropzone() {
   const [file, setFile] = useState(null);
   const [outputLanguage, setOutputLanguage] = useState("");
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
-  const [fileType, setFileType] = useState("");
-  const [fileUrl, setFileUrl] = useState("");
+  const [fileurl, setFileUrl] = useState("");
   const [transUrl, setTransUrl] = useState("");
 
   async function onFileChange(e) {
     const selectedFile = e.target.files[0];
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      return;
+    }
 
     const { type } = selectedFile;
-    if (
-      type !== "image/jpeg" &&
-      type !== "image/png" &&
-      type !== "application/pdf" &&
-      type !==
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
-      type !== "application/msword"
-    )
-      return;
 
-    const reader = new FileReader();
-    reader.onload = async () => {
-      let pdfDoc;
-      if (type === "application/pdf") {
-        const pdfData = new Uint8Array(reader.result);
-        pdfDoc = await PDFDocument.load(pdfData);
-      } else {
-        const imgData = reader.result;
-        pdfDoc = await PDFDocument.create();
-        const page = pdfDoc.addPage();
-        const { width, height } = page.getSize();
-
-        if (type === "image/jpeg") {
-          const img = await pdfDoc.embedJpg(imgData);
-          page.drawImage(img, {
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-          });
-        } else if (type === "image/png") {
-          const img = await pdfDoc.embedPng(imgData);
-          page.drawImage(img, {
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-          });
-        }
-      }
-
-      const pdfBytes = await pdfDoc.save();
-      const pdfFile = new File([pdfBytes], `${selectedFile.name}.pdf`, {
-        type: "application/pdf",
-      });
-      setFile(pdfFile);
-    };
-
-    if (
-      type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-      type === "application/msword"
-    ) {
+    if (type === "image/jpeg" || type === "image/png") {
+      const objectUrl = URL.createObjectURL(selectedFile);
+      const pdf = convertToPdf(objectUrl);
+      setFile(pdf);
+    } else {
       setFile(selectedFile);
-    } else if (type === "application/pdf") {
-      reader.readAsArrayBuffer(selectedFile);
-    } else if (type === "image/jpeg" || type === "image/png") {
-      reader.readAsDataURL(selectedFile);
     }
   }
 
@@ -93,103 +44,69 @@ function Dropzone() {
         providers: "google",
         source_language: "en",
         target_language: outputLanguage,
-        file_url: fileUrl,
+        file_url: fileurl,
       },
     };
     axios
       .request(options)
       .then((response) => {
-        console.log(response.data);
-        console.log(response.data.google.document_resource_url);
-        // download file
         const a = document.createElement("a");
         a.href = response.data.google.document_resource_url;
         a.download = `${file.name}.pdf`;
+        setTransUrl(response.data.google.document_resource_url);
         a.click();
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(() => {
+        // console.error(error);
       });
   }
 
   useEffect(() => {
-    setIsSubmitEnabled(outputLanguage && file && fileType);
-    console.log("Submit enabled:", outputLanguage && file && fileType);
-  }, [outputLanguage, file, fileType]);
-
-  
-
-  console.log("Rendered with file:", file);
-  console.log("Rendered with outputLanguage:", outputLanguage);
+    setIsSubmitEnabled(outputLanguage && file);
+  }, [outputLanguage, file]);
 
   return (
     <div className="flex-col items-center justify-center h-screen mt-16">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col items-center justify-center w-full mb-4">
-          <div className="flex">
-            <div className="w-full mb-4">
-              <FormControl
-                variant="outlined"
-                sx={{
-                  minWidth: 180,
-                }}
-              >
-                <InputLabel id="file-type-label">File Type</InputLabel>
-                <Select
-                  labelId="file-type-label"
-                  id="file-type-select"
-                  value={fileType}
-                  onChange={(e) => setFileType(e.target.value)}
-                  label="File Type"
-                >
-                  <MenuItem value="image">JPG/PNG</MenuItem>
-                  <MenuItem value="document">PDF/DOC</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
-            <div className="w-full mb-4 ml-96">
-              <FormControl
-                variant="outlined"
-                sx={{
-                  minWidth: 180,
-                  fontSize: 20,
-                  fontStyle: "bold",
-                }}
-                className="w-full"
-              >
-                <InputLabel id="output-language-label">
-                  Select Language
-                </InputLabel>
-                <Select
-                  labelId="output-language-label"
-                  id="output-language"
-                  value={outputLanguage}
-                  onChange={(e) => setOutputLanguage(e.target.value)}
-                  label="Select Language"
-                >
-                  <MenuItem value="hi">Hindi</MenuItem>
-                  <MenuItem value="ta">Tamil</MenuItem>
-                  <MenuItem value="kn">Kannada</MenuItem>
-                  <MenuItem value="ml">Malayalam</MenuItem>
-                  <MenuItem value="gu">Gujarati</MenuItem>
-                  <MenuItem value="mr">Marathi</MenuItem>
-                  <MenuItem value="pa">Punjabi</MenuItem>
-                  <MenuItem value="bn">Bengali</MenuItem>
-                  <MenuItem value="te">Telugu</MenuItem>
-                  <MenuItem value="ur">Urdu</MenuItem>
-                  <MenuItem value="or">Odia</MenuItem>
-                  <MenuItem value="as">Assamese</MenuItem>
-                  <MenuItem value="ks">Kashmiri</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
-          </div>
+          <FormControl
+            variant="outlined"
+            sx={{
+              minWidth: 180,
+              fontSize: 20,
+              fontStyle: "bold",
+            }}
+            className="w-full"
+          >
+            <InputLabel id="output-language-label">Select Language</InputLabel>
+            <Select
+              labelId="output-language-label"
+              id="output-language"
+              value={outputLanguage}
+              onChange={(e) => setOutputLanguage(e.target.value)}
+              label="Select Language"
+            >
+              <MenuItem value="hi">Hindi</MenuItem>
+              <MenuItem value="ta">Tamil</MenuItem>
+              <MenuItem value="kn">Kannada</MenuItem>
+              <MenuItem value="ml">Malayalam</MenuItem>
+              <MenuItem value="gu">Gujarati</MenuItem>
+              <MenuItem value="mr">Marathi</MenuItem>
+              <MenuItem value="pa">Punjabi</MenuItem>
+              <MenuItem value="bn">Bengali</MenuItem>
+              <MenuItem value="te">Telugu</MenuItem>
+              <MenuItem value="ur">Urdu</MenuItem>
+              <MenuItem value="or">Odia</MenuItem>
+              <MenuItem value="as">Assamese</MenuItem>
+              <MenuItem value="ks">Kashmiri</MenuItem>
+            </Select>
+          </FormControl>
           <label
             htmlFor="dropzone-file"
             className="flex flex-col items-center justify-center w-full h-64 mt-8 mb-6 border-black border-4 rounded-xl hover:border-dashed hover:border-gray-400 "
           >
             <div className="flex flex-col items-center justify-center pt-4 pb-5  ">
-            {/* <svg
+              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -211,7 +128,7 @@ function Dropzone() {
               id="dropzone-file"
               type="file"
               className="sr-only"
-              accept=".pdf,.jpg,.png,.doc,.docx"
+              accept=".pdf,.jpg,.png"
               onChange={onFileChange}
             />
           </label>
@@ -225,7 +142,6 @@ function Dropzone() {
                   src={`${URL.createObjectURL(file)}#toolbar=0`}
                   title={"Uploaded File"}
                   className="w-full h-64 border-2 border-gray-300 border-none rounded-lg"
-                  toggle="modal"
                 />
               </div>
               {transUrl && (
@@ -237,7 +153,6 @@ function Dropzone() {
                     src={transUrl}
                     title={"Uploaded File"}
                     className="w-full h-64 border-2 border-gray-300 border-none rounded-lg"
-                    toggle="modal"
                   />
                 </div>
               )}

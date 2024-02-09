@@ -1,8 +1,8 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import ChatbotComponent from "./ChatBot";
+import { useState } from "react";
+
+// import ChatbotComponent from "./ChatBot";
 const navigation = [
   { name: "Documents", href: "/" },
   { name: "Text", href: "/text-translate" },
@@ -29,9 +29,7 @@ export default function Dashboard() {
                   src="https://media.istockphoto.com/id/1322384899/fr/vectoriel/ic%C3%B4ne-documents-pile-de-feuilles-de-papier-document-confirm%C3%A9-ou-approuv%C3%A9-ic%C3%B4ne.jpg?s=612x612&w=0&k=20&c=HcWhEKL3q4P8xVZVIT5iOws8I0d8IMqigO2My78owTE="
                   alt=""
                 /> */}
-
               </a>
-
             </div>
             <div className="flex lg:hidden">
               <button
@@ -55,10 +53,10 @@ export default function Dashboard() {
               ))}
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-              <a
+              <div
                 href="#"
                 className="text-sm font-semibold leading-6 text-gray-900"
-              ></a>
+              ></div>
             </div>
           </nav>
           <Dialog
@@ -135,11 +133,13 @@ export default function Dashboard() {
       </div>
 
       <header className="bg-white shadow">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <div className="text-xl ml-4 text-blue-600 font-bold tracking-tight ">Document Translate</div>
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="text-xl ml-4 text-blue-600 font-bold tracking-tight ">
+            Document Translate
           </div>
-        </header>
-      <ChatbotComponent />
+        </div>
+      </header>
+      {/* <ChatbotComponent /> */}
     </>
   );
 }

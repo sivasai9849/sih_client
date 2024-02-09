@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { PDFDocument } from "pdf-lib";
-import { FileUpload } from "./../config/utils";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+import { FileUpload } from "./../config/utils";
 import TextToSpeech from "./Speech";
 export default function TextTranslate() {
   const [fileUrl, setFileUrl] = useState(null);
@@ -14,52 +14,51 @@ export default function TextTranslate() {
   const [playSummary, setPlaySummary] = useState(false); // State for controlling sound
   useEffect(() => {
     setIsSubmitEnabled(outputLanguage && file);
-    console.log("Submit enabled:", outputLanguage && file);
+    // console.log("Submit enabled:", outputLanguage && file);
   }, [outputLanguage, file]);
 
   async function onFileChange(e) {
     const selectedFile = e.target.files[0];
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      return;
+    }
     const { type } = selectedFile;
     const fileToUpload =
       type === "image/jpeg" || type === "image/png"
         ? selectedFile
         : selectedFile;
     setFile(fileToUpload);
-    console.log("File updated:", fileToUpload);
+    // console.log("File updated:", fileToUpload);
   }
 
   async function onSubmit() {
-    console.log("Submitting file:");
+    // console.log("Submitting file:");
     const fileUrl = await FileUpload(file, `uploads/${file.name}${Date.now()}`);
     setFileUrl(fileUrl);
     // Define the data to be sent in the request body
-    console.log(
-      "🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ fileUrl:",
-      fileUrl
-    );
+    // console.log(
+    //   "🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ fileUrl:",
+    //   fileUrl,
+    // );
     const data = {
       fileUrl: fileUrl, // Replace with the actual file URL
       targetLanguage: outputLanguage, // Replace with the actual target language
     };
-    console.log("🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ data:", data);
+    // console.log("🚀 ~ file: TextTranslate.jsx:34 ~ onSubmit ~ data:", data);
     try {
       const extracted_data = await axios.post(
         "https://sih-server.adaptable.app/process",
-        data
+        data,
       );
-      console.log("Response:", extracted_data.data);
+      // console.log("Response:", extracted_data.data);
       setExtracted_data(extracted_data.data);
       setRender(extracted_data.data.success);
       setPlaySummary(!playSummary);
     } catch (error) {
       // Handle any errors that occur during the request
-      console.error("Error:", error);
+      // console.error("Error:", error);
     }
   }
-
-  console.log("Rendered with file:", file);
-  console.log("Rendered with outputLanguage:", outputLanguage);
 
   return (
     <div className="flex-col  h-screen mt-16">
@@ -142,7 +141,6 @@ export default function TextTranslate() {
                 src={URL.createObjectURL(file)}
                 title={`PDF preview of ${file.name}`}
                 className="w-full h-64 border-2 border-gray-300 border-none rounded-lg"
-                toggle="modal"
               />
             </div>
           )}
